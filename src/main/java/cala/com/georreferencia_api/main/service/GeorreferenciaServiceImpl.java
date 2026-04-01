@@ -13,6 +13,9 @@ import cala.com.georreferencia_api.main.dto.GeorreferenciaQuery;
 import cala.com.georreferencia_api.main.entity.Georreferencia;
 import cala.com.georreferencia_api.main.repository.GeorreferenciaRepository;
 import cala.com.georreferencia_api.main.specification.ObtenerGeorreferenciaSpecification;
+import cala.com.georreferencia_api.nota.dto.NotaDTO;
+import cala.com.georreferencia_api.nota.entity.Nota;
+import cala.com.georreferencia_api.nota.repository.NotaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class GeorreferenciaServiceImpl implements GeorreferenciaService {
 
     private final GeorreferenciaRepository repository;
+
+    private final NotaRepository notaRepository;
 
     @Override
     public GeorreferenciaDTO findById(Long id) {
@@ -58,6 +63,13 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
         georreferencia.setProvinciaId(dto.getProvinciaId());
         georreferencia.setFechaCreacion(LocalDateTime.now());
         georreferencia.setFechaActualizacion(null);
+        // Manejo de Notas en la creación
+        if (dto.getNotas() != null && !dto.getNotas().isEmpty()) {
+            dto.getNotas().forEach(notaDto -> {
+                Nota nota = procesarNota(notaDto);
+                georreferencia.addNota(nota);
+            });
+        }
         Georreferencia saved = repository.save(georreferencia);
         return saved.toDTO();
     }
@@ -80,15 +92,42 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
         georreferencia.setUgId(dto.getUgId());
         georreferencia.setProvinciaId(dto.getProvinciaId());
         georreferencia.setFechaActualizacion(LocalDateTime.now());
+        // Sincronización de Notas
+        if (dto.getNotas() != null) {
+            // 1. Limpiamos las relaciones actuales
+            georreferencia.getNotas().clear();
+            // 2. Agregamos las notas del DTO
+            dto.getNotas().forEach(notaDto -> {
+                Nota nota = procesarNota(notaDto);
+                georreferencia.addNota(nota);
+            });
+        }
         Georreferencia updated = repository.save(georreferencia);
         return updated.toDTO();
     }
 
+    /**
+     * Método privado para decidir si la nota es nueva o una existente
+     */
+    private Nota procesarNota(NotaDTO dto) {
+        if (dto.getId() != null) {
+            return notaRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Nota no encontrada: " + dto.getId()));
+        } else {
+            Nota nuevaNota = new Nota();
+            nuevaNota.setTexto(dto.getTexto());
+            nuevaNota.setFechaCreacion(LocalDateTime.now());
+            nuevaNota.setDelete(false);
+            return notaRepository.save(nuevaNota);
+        }
+    }
+
     @Override
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Georreferencia no encontrada: " + id);
-        }
-        repository.deleteById(id);
+        Georreferencia geo = repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Georreferencia no encontrada: " + id));
+        
+        geo.getNotas().clear();
+        repository.delete(geo);
     }
 }

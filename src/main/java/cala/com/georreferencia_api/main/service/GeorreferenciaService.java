@@ -20,7 +20,3 @@ public interface GeorreferenciaService {
     void delete(Long id);
 
 }
-
-// TODO: armar el repositorio de github y subir el proyecto
-// TODO: agregar idGeorreferencia en la tabla persona
-// TODO: agregar tabla de notas

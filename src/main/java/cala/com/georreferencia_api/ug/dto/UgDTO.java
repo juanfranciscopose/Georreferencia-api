@@ -1,7 +1,10 @@
 package cala.com.georreferencia_api.ug.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import cala.com.georreferencia_api.nota.dto.NotaDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -44,5 +47,7 @@ public class UgDTO {
     private LocalDateTime fechaActualizacion;
 
     private Boolean destacado;
+
+    private List<NotaDTO> notas = new ArrayList<>();
 
 }

@@ -1,7 +1,10 @@
 package cala.com.georreferencia_api.main.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import cala.com.georreferencia_api.nota.dto.NotaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -30,5 +33,5 @@ public class GeorreferenciaDTO {
     private Integer provinciaId;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
-
+    private List<NotaDTO> notas = new ArrayList<>();
 }

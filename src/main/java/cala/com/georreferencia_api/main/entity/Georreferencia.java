@@ -1,13 +1,22 @@
 package cala.com.georreferencia_api.main.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import cala.com.georreferencia_api.main.dto.GeorreferenciaDTO;
+import cala.com.georreferencia_api.nota.dto.NotaDTO;
+import cala.com.georreferencia_api.nota.entity.Nota;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -76,8 +85,30 @@ public class Georreferencia {
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
 
-    public GeorreferenciaDTO toDTO() {
+    @ManyToMany
+    @JoinTable(
+        name = "georreferencias_notas",
+        schema = "data",
+        joinColumns = @JoinColumn(name = "georreferencia_id"),
+        inverseJoinColumns = @JoinColumn(name = "nota_id")
+    )
+    private Set<Nota> notas = new HashSet<>();
 
+    public void addNota(Nota nota) {
+        this.notas.add(nota);
+        nota.getGeorreferencias().add(this);
+    }
+
+    public void removeNota(Nota nota) {
+        this.notas.remove(nota);
+        nota.getGeorreferencias().remove(this);
+    }
+
+    public GeorreferenciaDTO toDTO() {
+        List<NotaDTO> notasDto = (this.notas != null) 
+            ? this.notas.stream().map(Nota::toDto).toList() 
+            : new ArrayList<>();
+        
         return new GeorreferenciaDTO(
             this.getId(),
             this.getEstadoEdilicio(),
@@ -94,7 +125,8 @@ public class Georreferencia {
             this.getCiudadId(),
             this.getProvinciaId(),
             this.getFechaCreacion(),
-            this.getFechaActualizacion()
+            this.getFechaActualizacion(),
+            notasDto
         );
     }
 }

@@ -1,5 +1,6 @@
 package cala.com.georreferencia_api;
 
+import cala.com.georreferencia_api.nota.dto.NotaDTO;
 import cala.com.georreferencia_api.ug.dto.UgDTO;
 import tools.jackson.databind.ObjectMapper;
 import static org.hamcrest.Matchers.hasSize;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -99,4 +102,44 @@ public class UgControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
+
+    @Test
+    void testCreateUgConNotas() throws Exception {
+            NotaDTO notaDto = new NotaDTO();
+            notaDto.setTexto("Nota de prueba UG");
+
+            UgDTO dto = new UgDTO();
+            dto.setNombreCorto("UG-NOTAS");
+            dto.setNombreLargo("Unidad con Notas");
+            dto.setLocalidadId(100L);
+            dto.setNotas(List.of(notaDto));
+
+            mockMvc.perform(post("/api/ugs")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(dto)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.nombreCorto").value("UG-NOTAS"))
+                    .andExpect(jsonPath("$.notas", hasSize(1)))
+                    .andExpect(jsonPath("$.notas[0].texto").value("Nota de prueba UG"))
+                    .andExpect(jsonPath("$.notas[0].id").exists());
+        }
+
+        @Test
+        void testUpdateUgSincronizarNotas() throws Exception {
+            // Asumiendo que la nota 50 existe por data.sql
+            NotaDTO notaExistente = new NotaDTO();
+            notaExistente.setId(50L);
+
+            UgDTO updateDto = new UgDTO();
+            updateDto.setNombreCorto("UG-UPD");
+            updateDto.setLocalidadId(100L);
+            updateDto.setNotas(List.of(notaExistente));
+
+            mockMvc.perform(put("/api/ugs/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(updateDto)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.notas", hasSize(1)))
+                    .andExpect(jsonPath("$.notas[0].id").value(50));
+        }
 }

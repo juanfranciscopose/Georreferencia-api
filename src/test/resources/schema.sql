@@ -45,3 +45,34 @@ create table if not exists data.georreferencias(
     FECHA_CREACION TIMESTAMP NOT NULL, 
     FECHA_ACTUALIZACION TIMESTAMP
 );
+
+create table if not exists data.georreferencias_personas(
+    persona_id BIGINT,
+    georreferencia_id BIGINT,
+    PRIMARY KEY (persona_id, georreferencia_id),
+    FOREIGN KEY (georreferencia_id) REFERENCES data.georreferencias(id)
+);
+
+create table if not exists data.georreferencias_notas(
+    nota_id BIGINT,
+    georreferencia_id BIGINT,
+    PRIMARY KEY (nota_id, georreferencia_id),
+    FOREIGN KEY (georreferencia_id) REFERENCES data.georreferencias(id)
+);
+
+CREATE SEQUENCE IF NOT EXISTS data.notas_seq
+     START WITH 1 INCREMENT BY 1;
+
+create table if not exists data.notas(
+    ID BIGINT PRIMARY KEY,
+    TEXTO VARCHAR2(255),
+    FECHA_CREACION TIMESTAMP NOT NULL,
+    DELETE BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS data.ugs_notas (
+    ug_id BIGINT NOT NULL,
+    nota_id BIGINT NOT NULL,
+    PRIMARY KEY (ug_id, nota_id),
+    FOREIGN KEY (ug_id) REFERENCES data.ugs(id)
+);
