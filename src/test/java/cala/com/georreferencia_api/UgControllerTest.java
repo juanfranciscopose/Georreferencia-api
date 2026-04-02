@@ -125,21 +125,35 @@ public class UgControllerTest {
         }
 
         @Test
-        void testUpdateUgSincronizarNotas() throws Exception {
-            // Asumiendo que la nota 50 existe por data.sql
-            NotaDTO notaExistente = new NotaDTO();
-            notaExistente.setId(50L);
+        void testUpdateUgSincronizarNotas() throws Exception {        
+        NotaDTO notaExistente = new NotaDTO();
+        notaExistente.setId(50L);
 
-            UgDTO updateDto = new UgDTO();
-            updateDto.setNombreCorto("UG-UPD");
-            updateDto.setLocalidadId(100L);
-            updateDto.setNotas(List.of(notaExistente));
+        NotaDTO notaNueva = new NotaDTO();
+        notaNueva.setTexto("Nueva nota para esta UG");
 
-            mockMvc.perform(put("/api/ugs/1")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateDto)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.notas", hasSize(1)))
-                    .andExpect(jsonPath("$.notas[0].id").value(50));
+        UgDTO updateDto = new UgDTO();
+        updateDto.setNombreCorto("UG-UPD");
+        updateDto.setNombreLargo("UNIDAD DE GEORREFERENCIA ACTUALIZADA");
+        updateDto.setLocalidadId(100L);
+        updateDto.setNotas(List.of(notaExistente, notaNueva));
+
+        // 2. WHEN: Ejecutamos el PUT
+        mockMvc.perform(put("/api/ugs/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto)))
+                // 3. THEN: Validaciones de respuesta inmediata
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombreCorto").value("UG-UPD"))
+                .andExpect(jsonPath("$.notas", hasSize(2)))
+                .andExpect(jsonPath("$.notas[?(@.id==50)]").exists())
+                .andExpect(jsonPath("$.notas[?(@.texto=='Nueva nota para esta UG')]").exists());
+
+        // 4. VERIFICACIÓN DE INTEGRIDAD (Opcional pero recomendado)
+        // Hacemos un GET para asegurar que la base de datos realmente soltó la nota 51
+        mockMvc.perform(get("/api/ugs/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.notas", hasSize(2)))
+                .andExpect(jsonPath("$.notas[?(@.id==51)]").doesNotExist());
         }
 }

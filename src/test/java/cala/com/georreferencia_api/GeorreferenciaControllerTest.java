@@ -222,4 +222,47 @@ public class GeorreferenciaControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    void debeSincronizarNotasCompleto_MantenerAgregarYBorrar() throws Exception {
+        // 1. GIVEN: Una Georreferencia que ya tiene dos notas (IDs 50 y 51)
+        // Asumimos que data.sql insertó la Geo 10 con estas notas.
+        
+        // Preparar el DTO para el Update:
+        // - Queremos mantener la nota 50.
+        // - Queremos eliminar la nota 51 (simplemente no la incluimos en la lista).
+        // - Queremos agregar una nota nueva.
+        
+        NotaDTO notaAMantener = new NotaDTO();
+        notaAMantener.setId(50L); 
+        // Si tu lógica de procesarNota solo busca por ID, el texto no importa, 
+        // pero es buena práctica mandarlo si tu mapper lo requiere.
+
+        NotaDTO notaNueva = new NotaDTO();
+        notaNueva.setTexto("Nota Creada en Update");
+
+        GeorreferenciaDTO updateDto = new GeorreferenciaDTO();
+        updateDto.setCalle("Calle Sincronizada");
+        updateDto.setNotas(List.of(notaAMantener, notaNueva));
+
+        // 2. WHEN
+        mockMvc.perform(put("/api/georreferencias/10")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        // 3. THEN: Validaciones de Integridad
+        
+        // Verificamos que la respuesta tiene exactamente 2 notas
+        mockMvc.perform(get("/api/georreferencias/10"))
+                .andExpect(jsonPath("$.notas", hasSize(2)))
+                // La nota 50 debe seguir ahí
+                .andExpect(jsonPath("$.notas[?(@.id==50)]").exists())
+                // La nota 51 NO debe estar más
+                .andExpect(jsonPath("$.notas[?(@.id==51)]").doesNotExist())
+                // Debe existir una nota nueva con ID generado (distinto a 50 y 51)
+                .andExpect(jsonPath("$.notas[?(@.texto=='Nota Creada en Update')]").exists())
+                .andExpect(jsonPath("$.notas[?(@.texto=='Nota Creada en Update')].id").isNotEmpty());
+   }
+
 }

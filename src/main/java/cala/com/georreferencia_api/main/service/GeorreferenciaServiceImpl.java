@@ -67,7 +67,6 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
         // Manejo de Notas
         if (dto.getNotas() != null && !dto.getNotas().isEmpty()) {
             dto.getNotas().forEach(notaDto -> {
-                // procesarNota ya no debería hacer .save() interno
                 Nota nota = procesarNota(notaDto);
                 georreferencia.addNota(nota);
             });
@@ -117,6 +116,7 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
             nuevaNota.setTexto(dto.getTexto());
             nuevaNota.setFechaCreacion(LocalDateTime.now());
             nuevaNota.setDelete(false);
+            nuevaNota.setCodigoRecordatorio(dto.getCodigoRecordatorio());
             return nuevaNota;
         }
     }

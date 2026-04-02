@@ -9,6 +9,7 @@ import java.util.Set;
 import cala.com.georreferencia_api.nota.dto.NotaDTO;
 import cala.com.georreferencia_api.nota.entity.Nota;
 import cala.com.georreferencia_api.ug.dto.UgDTO;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -73,7 +74,7 @@ public class Ug {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean destacado;
 
-    @ManyToMany
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinTable(
         name = "ugs_notas",
         schema = "data",

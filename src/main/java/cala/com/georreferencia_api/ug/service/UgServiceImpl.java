@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import cala.com.georreferencia_api.exceptions.EntityNotFoundException;
+import cala.com.georreferencia_api.main.entity.Georreferencia;
 import cala.com.georreferencia_api.nota.dto.NotaDTO;
 import cala.com.georreferencia_api.nota.entity.Nota;
 import cala.com.georreferencia_api.nota.repository.NotaRepository;
@@ -64,7 +65,9 @@ public class UgServiceImpl implements UgService {
                 ug.addNota(nota);
             });
         }
-        return repository.save(ug).toDTO();
+        Ug saved = repository.save(ug);
+        repository.flush();
+        return saved.toDTO();
     }
 
     @Override
@@ -83,20 +86,17 @@ public class UgServiceImpl implements UgService {
         ug.setDestacado(dto.getDestacado());
         // Sincronización de Notas
         if (dto.getNotas() != null) {
-            // 1. Limpiamos las relaciones actuales
             ug.getNotas().clear();
-            // 2. Agregamos las notas del DTO
             dto.getNotas().forEach(notaDto -> {
                 Nota nota = procesarNota(notaDto);
                 ug.addNota(nota);
             });
         }
-        return repository.save(ug).toDTO();
+        Ug updated = repository.save(ug);
+        repository.flush();
+        return updated.toDTO();
     }
 
-    /**
-     * Método privado para decidir si la nota es nueva o una existente
-     */
     private Nota procesarNota(NotaDTO dto) {
         if (dto.getId() != null) {
             return notaRepository.findById(dto.getId())
@@ -106,6 +106,7 @@ public class UgServiceImpl implements UgService {
             nuevaNota.setTexto(dto.getTexto());
             nuevaNota.setFechaCreacion(LocalDateTime.now());
             nuevaNota.setDelete(false);
+            nuevaNota.setCodigoRecordatorio(dto.getCodigoRecordatorio());
             return notaRepository.save(nuevaNota);
         }
     }

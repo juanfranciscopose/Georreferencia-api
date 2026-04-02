@@ -52,12 +52,15 @@ public class Nota {
     @ManyToMany(mappedBy = "notas")
     private Set<Ug> ugs = new HashSet<>();
 
+    private String codigoRecordatorio;
+
     public NotaDTO toDto () {
         return new NotaDTO(
             this.getId(),
             this.getTexto(),
             this.getFechaCreacion(),
-            this.getDelete()
+            this.getDelete(),
+            this.getCodigoRecordatorio()
         );
     }
 }

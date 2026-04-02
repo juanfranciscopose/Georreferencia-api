@@ -18,4 +18,5 @@ public class NotaDTO {
     private String texto;
     private LocalDateTime fechaCreacion;
     private Boolean delete;
+    private String codigoRecordatorio;
 }
