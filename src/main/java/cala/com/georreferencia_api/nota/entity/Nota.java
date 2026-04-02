@@ -28,10 +28,10 @@ import lombok.Setter;
 @Setter
 public class Nota {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "georreferencia_gen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "nota_seq")
     @SequenceGenerator(
-        name = "georreferencia_gen", 
-        sequenceName = "data.georreferencias_seq", 
+        name = "nota_seq", 
+        sequenceName = "data.notas_seq", 
         allocationSize = 1)
         // TODO: falta autor de la nota
     @Column
