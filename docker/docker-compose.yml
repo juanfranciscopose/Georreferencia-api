@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+
+  persona-api:
+    image: cala/servicios/georreferencia-api:latest
+    container_name: georreferencia-api
+
+    ports:
+      - "8080:8080"
+
+    environment:
+
+      SPRING_THREADS_VIRTUAL_ENABLED: "true"
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/test-db
+      SPRING_DATASOURCE_USERNAME: test
+      SPRING_DATASOURCE_PASSWORD: test
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "true"

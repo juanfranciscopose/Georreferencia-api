@@ -1,3 +1,6 @@
+DELETE FROM data.georreferencias_personas;
+DELETE FROM data.georreferencias_notas;
+delete from data.ugs_notas;
 DELETE FROM data.georreferencias;
 DELETE FROM data.ugs;
 
