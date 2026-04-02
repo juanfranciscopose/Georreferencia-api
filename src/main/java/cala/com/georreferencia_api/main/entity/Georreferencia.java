@@ -9,6 +9,7 @@ import java.util.Set;
 import cala.com.georreferencia_api.main.dto.GeorreferenciaDTO;
 import cala.com.georreferencia_api.nota.dto.NotaDTO;
 import cala.com.georreferencia_api.nota.entity.Nota;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -85,7 +86,7 @@ public class Georreferencia {
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "georreferencias_notas",
         schema = "data",
