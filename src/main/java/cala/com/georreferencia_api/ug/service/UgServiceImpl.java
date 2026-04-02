@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import cala.com.georreferencia_api.exceptions.EntityNotFoundException;
-import cala.com.georreferencia_api.main.entity.Georreferencia;
 import cala.com.georreferencia_api.nota.dto.NotaDTO;
 import cala.com.georreferencia_api.nota.entity.Nota;
 import cala.com.georreferencia_api.nota.repository.NotaRepository;
