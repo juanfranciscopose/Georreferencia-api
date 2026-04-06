@@ -52,7 +52,11 @@ public class Nota {
     @ManyToMany(mappedBy = "notas")
     private Set<Ug> ugs = new HashSet<>();
 
-    private String codigoRecordatorio;
+    @Column
+    private LocalDateTime fechaRecordatorio;
+
+    @Column
+    private Boolean recordatorioCancelado;
 
     public NotaDTO toDto () {
         return new NotaDTO(
@@ -60,7 +64,8 @@ public class Nota {
             this.getTexto(),
             this.getFechaCreacion(),
             this.getDelete(),
-            this.getCodigoRecordatorio()
+            this.getFechaRecordatorio(),
+            this.getRecordatorioCancelado()
         );
     }
 }

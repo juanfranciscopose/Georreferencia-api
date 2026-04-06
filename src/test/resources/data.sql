@@ -26,8 +26,8 @@ INSERT INTO data.georreferencias (id, estado_edilicio, calle, numero, ug_id, fec
 VALUES (11, 'MALO', 'Calle Vieja', '200', 1, NOW(), 4);
 
 -- Nota compartida (ID 50)
-INSERT INTO data.notas (id, texto, fecha_creacion, delete) 
-VALUES (50, 'Nota preexistente importante', NOW(), false);
+INSERT INTO data.notas (id, texto, fecha_creacion, delete, fecha_recordatorio, recordatorio_cancelado) 
+VALUES (50, 'Nota preexistente importante', NOW(), false, NULL, false);
 
 -- Relaciones
 INSERT INTO data.georreferencias_personas (persona_id, georreferencia_id) VALUES (10, 10);
@@ -38,3 +38,6 @@ INSERT INTO data.georreferencias_notas (nota_id, georreferencia_id) VALUES (50, 
 
 Insert into data.georreferencias_instituciones (institucion_id, georreferencia_id) VALUES (100, 1);
 Insert into data.georreferencias_instituciones (institucion_id, georreferencia_id) VALUES (100, 2);
+
+INSERT INTO data.notas (id, texto, fecha_creacion, delete, fecha_recordatorio, recordatorio_cancelado) 
+VALUES (998, 'El contacto fue positivo, requiere seguimiento.', CURRENT_TIMESTAMP, FALSE, '2026-04-10 10:00:00', FALSE);

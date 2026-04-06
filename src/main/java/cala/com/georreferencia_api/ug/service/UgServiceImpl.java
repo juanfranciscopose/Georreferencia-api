@@ -105,7 +105,8 @@ public class UgServiceImpl implements UgService {
             nuevaNota.setTexto(dto.getTexto());
             nuevaNota.setFechaCreacion(LocalDateTime.now());
             nuevaNota.setDelete(false);
-            nuevaNota.setCodigoRecordatorio(dto.getCodigoRecordatorio());
+            nuevaNota.setFechaRecordatorio(dto.getFechaRecordatorio());
+            nuevaNota.setRecordatorioCancelado(dto.getFechaRecordatorio()!= null ? false : null);
             return notaRepository.save(nuevaNota);
         }
     }

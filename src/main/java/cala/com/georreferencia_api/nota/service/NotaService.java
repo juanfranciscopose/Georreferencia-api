@@ -6,4 +6,6 @@ public interface NotaService {
     public NotaDTO findById(Long id);
     public NotaDTO deleteLogico(Long id);
     public NotaDTO altaLogica(Long id);
+    public NotaDTO cancelarRecordatorio(Long id);
+    public NotaDTO postponerRecordatorio(Long id, int dias, int horas, int minutos);
 }

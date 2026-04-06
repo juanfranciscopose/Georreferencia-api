@@ -28,4 +28,14 @@ public class NotaController {
     public ResponseEntity<NotaDTO> darDeAltaLogica(@PathVariable Long id) {
         return ResponseEntity.ok(service.altaLogica(id));
     }
+
+    @PutMapping("/{id}/cancelar-recordatorio")
+    public ResponseEntity<NotaDTO> cancelarRecordatorio(@PathVariable Long id) {
+        return ResponseEntity.ok(service.cancelarRecordatorio(id));
+    }
+
+    @PutMapping("/{id}/postponer-recordatorio/{dias}/{horas}/{minutos}")
+    public ResponseEntity<NotaDTO> postponerRecordatorio(@PathVariable Long id, @PathVariable int dias, @PathVariable int horas, @PathVariable int minutos) {
+        return ResponseEntity.ok(service.postponerRecordatorio(id, dias, horas, minutos));
+    }
 }
