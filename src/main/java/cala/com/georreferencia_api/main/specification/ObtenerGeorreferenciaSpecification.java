@@ -34,6 +34,10 @@ public class ObtenerGeorreferenciaSpecification {
                 predicates.add(cb.equal(root.get("ugId"), query.getUgId()));
             }
 
+            if (query.getEstadoEdilicioId() != null) {
+                predicates.add(cb.equal(root.get("estadoEdilicioId"), query.getEstadoEdilicioId()));
+            }
+
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

@@ -95,6 +95,9 @@ public class Georreferencia {
     )
     private Set<Nota> notas = new HashSet<>();
 
+    @Column(name = "estado_edilicio_id")
+    private Integer estadoEdilicioId;
+
     public void addNota(Nota nota) {
         this.notas.add(nota);
         nota.getGeorreferencias().add(this);
@@ -127,6 +130,7 @@ public class Georreferencia {
             this.getProvinciaId(),
             this.getFechaCreacion(),
             this.getFechaActualizacion(),
+            this.getEstadoEdilicioId(),
             notasDto
         );
     }

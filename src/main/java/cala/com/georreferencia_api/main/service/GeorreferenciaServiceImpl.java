@@ -63,6 +63,7 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
         georreferencia.setUgId(dto.getUgId());
         georreferencia.setProvinciaId(dto.getProvinciaId());
         georreferencia.setFechaCreacion(LocalDateTime.now());
+        georreferencia.setEstadoEdilicioId(dto.getEstadoEdilicioId());
         georreferencia.setFechaActualizacion(null);
         // Manejo de Notas
         if (dto.getNotas() != null && !dto.getNotas().isEmpty()) {
@@ -94,6 +95,7 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
         georreferencia.setUgId(dto.getUgId());
         georreferencia.setProvinciaId(dto.getProvinciaId());
         georreferencia.setFechaActualizacion(LocalDateTime.now());
+        georreferencia.setEstadoEdilicioId(dto.getEstadoEdilicioId());
         // Sincronización de Notas
         if (dto.getNotas() != null) {
             georreferencia.getNotas().clear();

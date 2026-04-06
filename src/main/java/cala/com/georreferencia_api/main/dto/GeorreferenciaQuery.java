@@ -17,4 +17,5 @@ public class GeorreferenciaQuery {
     private Long barrioId;
     private Long ciudadId;
     private Integer provinciaId;
+    private Integer estadoEdilicioId;
 }

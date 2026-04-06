@@ -33,5 +33,6 @@ public class GeorreferenciaDTO {
     private Integer provinciaId;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
+    private Integer estadoEdilicioId;
     private List<NotaDTO> notas = new ArrayList<>();
 }

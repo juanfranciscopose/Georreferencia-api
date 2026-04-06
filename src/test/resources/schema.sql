@@ -43,7 +43,15 @@ create table if not exists data.georreferencias(
     CIUDAD_ID BIGINT,
     PROVINCIA_ID INT,
     FECHA_CREACION TIMESTAMP NOT NULL, 
-    FECHA_ACTUALIZACION TIMESTAMP
+    FECHA_ACTUALIZACION TIMESTAMP,
+    ESTADO_EDILICIO_ID INT
+);
+
+create table if not exists data.georreferencias_instituciones(
+    institucion_id BIGINT,
+    georreferencia_id BIGINT,
+    PRIMARY KEY (institucion_id, georreferencia_id),
+    FOREIGN KEY (georreferencia_id) REFERENCES data.georreferencias(id)
 );
 
 create table if not exists data.georreferencias_personas(
