@@ -41,9 +41,6 @@ public class Georreferencia {
     @Column
     private Long id;
 
-    @Column(length = 50)
-    private String estadoEdilicio;
-
     @Column(name = "edificio_electoral", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean edificioElectoral;
 
@@ -115,7 +112,6 @@ public class Georreferencia {
         
         return new GeorreferenciaDTO(
             this.getId(),
-            this.getEstadoEdilicio(),
             this.getEdificioElectoral(),
             this.getCalle(),
             this.getEntre1(),

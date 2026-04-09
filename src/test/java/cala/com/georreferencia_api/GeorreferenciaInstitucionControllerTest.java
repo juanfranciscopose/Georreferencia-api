@@ -48,7 +48,6 @@ public class GeorreferenciaInstitucionControllerTest {
     void testCreateGeorreferenciaForInstitucion() throws Exception {
         GeorreferenciaDTO dto = new GeorreferenciaDTO();
         dto.setCalle("Calle Nueva Institucion");
-        dto.setEstadoEdilicio("BUENO");
         dto.setUgId(1L);
         dto.setLocalidadId(100L);
         dto.setBarrioId(10L);
@@ -68,7 +67,6 @@ public class GeorreferenciaInstitucionControllerTest {
         mockMvc.perform(delete("/api/instituciones/100/georreferencias/1"))
                 .andExpect(status().isNoContent());
 
-        // Verify it's deleted
         mockMvc.perform(get("/api/instituciones/100/georreferencias"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -80,7 +78,6 @@ public class GeorreferenciaInstitucionControllerTest {
         mockMvc.perform(delete("/api/instituciones/100/georreferencias"))
                 .andExpect(status().isNoContent());
 
-        // Verify all are deleted
         mockMvc.perform(get("/api/instituciones/100/georreferencias"))
                 .andExpect(status().isNoContent());
     }

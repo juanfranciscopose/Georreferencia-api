@@ -29,7 +29,6 @@ CREATE SEQUENCE IF NOT EXISTS data.georreferencias_seq
 
 create table if not exists data.georreferencias(
     id BIGINT PRIMARY KEY,
-    ESTADO_EDILICIO VARCHAR2(255),
     EDIFICIO_ELECTORAL BOOLEAN,
     CALLE VARCHAR2(100),
     ENTRE1 VARCHAR2(100),

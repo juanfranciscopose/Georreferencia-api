@@ -138,19 +138,15 @@ public class UgControllerTest {
         updateDto.setLocalidadId(100L);
         updateDto.setNotas(List.of(notaExistente, notaNueva));
 
-        // 2. WHEN: Ejecutamos el PUT
         mockMvc.perform(put("/api/ugs/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDto)))
-                // 3. THEN: Validaciones de respuesta inmediata
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombreCorto").value("UG-UPD"))
                 .andExpect(jsonPath("$.notas", hasSize(2)))
                 .andExpect(jsonPath("$.notas[?(@.id==50)]").exists())
                 .andExpect(jsonPath("$.notas[?(@.texto=='Nueva nota para esta UG')]").exists());
 
-        // 4. VERIFICACIÓN DE INTEGRIDAD (Opcional pero recomendado)
-        // Hacemos un GET para asegurar que la base de datos realmente soltó la nota 51
         mockMvc.perform(get("/api/ugs/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.notas", hasSize(2)))

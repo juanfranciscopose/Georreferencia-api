@@ -18,7 +18,6 @@ import lombok.Setter;
 @Setter
 public class GeorreferenciaDTO {
     private Long id;
-    private String estadoEdilicio;
     private Boolean edificioElectoral;
     private String calle;
     private String entre1;

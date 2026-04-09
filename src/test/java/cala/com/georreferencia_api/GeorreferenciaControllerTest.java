@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional // Limpia la base de datos después de cada test
+@Transactional
 public class GeorreferenciaControllerTest {
 
     @Autowired
@@ -37,15 +37,13 @@ public class GeorreferenciaControllerTest {
         GeorreferenciaDTO dto = new GeorreferenciaDTO();
         dto.setId(10L);
         dto.setCalle("Calle Falsa 123");
-        dto.setEstadoEdilicio("BUENO");
         dto.setUgId(1L);
 
         mockMvc.perform(post("/api/personas/1/georreferencias")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.calle").value("Calle Falsa 123"))
-                .andExpect(jsonPath("$.estadoEdilicio").value("BUENO"));
+                .andExpect(jsonPath("$.calle").value("Calle Falsa 123"));
     }
 
     @Test
@@ -82,7 +80,6 @@ public class GeorreferenciaControllerTest {
     void testUpdateGeorreferencia() throws Exception {
         GeorreferenciaDTO updateDto = new GeorreferenciaDTO();
         updateDto.setCalle("Nueva Avenida");
-        updateDto.setEstadoEdilicio("EXCELENTE");
 
         mockMvc.perform(put("/api/georreferencias/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,17 +111,15 @@ public class GeorreferenciaControllerTest {
 
     @Test
     void debeCrearGeorreferenciaConNotasYPersona() throws Exception {
-        // Preparar DTO con notas
         NotaDTO notaDto = new NotaDTO();
         notaDto.setTexto("Nota de prueba de integración");
 
         GeorreferenciaDTO dto = new GeorreferenciaDTO();
         dto.setCalle("Calle Nueva 123");
-        dto.setEstadoEdilicio("BUENO");
         dto.setUgId(1L);
         dto.setNotas(List.of(notaDto));
 
-        mockMvc.perform(post("/api/personas/{personaId}/georreferencias", 99L) // Persona ID 99
+        mockMvc.perform(post("/api/personas/{personaId}/georreferencias", 99L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -136,7 +131,6 @@ public class GeorreferenciaControllerTest {
 
     @Test
     void debeFiltrarPorPersonaId() throws Exception {
-        // El data.sql inserta: georreferencias_personas (georreferencia_id: 2, persona_id: 1)
         mockMvc.perform(get("/api/personas/{personaId}/georreferencias", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -147,19 +141,16 @@ public class GeorreferenciaControllerTest {
     void debeActualizarGeorreferencia() throws Exception {
         GeorreferenciaDTO updateDto = new GeorreferenciaDTO();
         updateDto.setCalle("Calle Modificada");
-        updateDto.setEstadoEdilicio("EXCELENTE");
 
         mockMvc.perform(put("/api/georreferencias/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.calle").value("Calle Modificada"))
-                .andExpect(jsonPath("$.estadoEdilicio").value("EXCELENTE"));
+                .andExpect(jsonPath("$.calle").value("Calle Modificada"));
     }
 
     @Test
     void debeBorrarGeorreferenciaYRelacion() throws Exception {
-        // Borramos la geo 2 que está vinculada a la persona 1
         mockMvc.perform(delete("/api/personas/{pId}/georreferencias/{gId}", 1L, 2L))
                 .andExpect(status().isNoContent());
 
@@ -169,9 +160,8 @@ public class GeorreferenciaControllerTest {
 
     @Test
     void debeSincronizarNotasEnUpdate() throws Exception {
-        // 1. Preparamos el DTO para la Geo ID 10 (que ya tiene la nota 50)
         NotaDTO notaExistente = new NotaDTO();
-        notaExistente.setId(50L); // Referenciamos la nota que ya está en DB
+        notaExistente.setId(50L);
 
         NotaDTO notaNueva = new NotaDTO();
         notaNueva.setTexto("Esta nota es totalmente nueva");
@@ -224,18 +214,9 @@ public class GeorreferenciaControllerTest {
 
     @Test
     void debeSincronizarNotasCompleto_MantenerAgregarYBorrar() throws Exception {
-        // 1. GIVEN: Una Georreferencia que ya tiene dos notas (IDs 50 y 51)
-        // Asumimos que data.sql insertó la Geo 10 con estas notas.
-        
-        // Preparar el DTO para el Update:
-        // - Queremos mantener la nota 50.
-        // - Queremos eliminar la nota 51 (simplemente no la incluimos en la lista).
-        // - Queremos agregar una nota nueva.
         
         NotaDTO notaAMantener = new NotaDTO();
         notaAMantener.setId(50L); 
-        // Si tu lógica de procesarNota solo busca por ID, el texto no importa, 
-        // pero es buena práctica mandarlo si tu mapper lo requiere.
 
         NotaDTO notaNueva = new NotaDTO();
         notaNueva.setTexto("Nota Creada en Update");
@@ -244,23 +225,16 @@ public class GeorreferenciaControllerTest {
         updateDto.setCalle("Calle Sincronizada");
         updateDto.setNotas(List.of(notaAMantener, notaNueva));
 
-        // 2. WHEN
         mockMvc.perform(put("/api/georreferencias/10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
-        // 3. THEN: Validaciones de Integridad
         
-        // Verificamos que la respuesta tiene exactamente 2 notas
         mockMvc.perform(get("/api/georreferencias/10"))
                 .andExpect(jsonPath("$.notas", hasSize(2)))
-                // La nota 50 debe seguir ahí
                 .andExpect(jsonPath("$.notas[?(@.id==50)]").exists())
-                // La nota 51 NO debe estar más
                 .andExpect(jsonPath("$.notas[?(@.id==51)]").doesNotExist())
-                // Debe existir una nota nueva con ID generado (distinto a 50 y 51)
                 .andExpect(jsonPath("$.notas[?(@.texto=='Nota Creada en Update')]").exists())
                 .andExpect(jsonPath("$.notas[?(@.texto=='Nota Creada en Update')].id").isNotEmpty());
    }

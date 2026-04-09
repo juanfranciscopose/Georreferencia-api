@@ -49,7 +49,6 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
     public GeorreferenciaDTO create(GeorreferenciaDTO dto) {
         Georreferencia georreferencia = new Georreferencia();
         georreferencia.setId(null);
-        georreferencia.setEstadoEdilicio(dto.getEstadoEdilicio());
         georreferencia.setEdificioElectoral(dto.getEdificioElectoral());
         georreferencia.setCalle(dto.getCalle());
         georreferencia.setEntre1(dto.getEntre1());
@@ -81,7 +80,6 @@ public class GeorreferenciaServiceImpl implements GeorreferenciaService {
     public GeorreferenciaDTO update(Long id, GeorreferenciaDTO dto) {
         Georreferencia georreferencia = repository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Georreferencia no encontrada: " + id));
-        georreferencia.setEstadoEdilicio(dto.getEstadoEdilicio());
         georreferencia.setEdificioElectoral(dto.getEdificioElectoral());
         georreferencia.setCalle(dto.getCalle());
         georreferencia.setEntre1(dto.getEntre1());
