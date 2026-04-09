@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
 
-  persona-api:
+  georreferencia-api:
     image: cala/servicios/georreferencia-api:latest
     container_name: georreferencia-api
 
