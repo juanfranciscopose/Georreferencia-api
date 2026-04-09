@@ -43,7 +43,7 @@ create table if not exists data.georreferencias(
     PROVINCIA_ID INT,
     FECHA_CREACION TIMESTAMP NOT NULL, 
     FECHA_ACTUALIZACION TIMESTAMP,
-    ESTADO_EDILICIO_ID INT
+    ESTADO_EDILICIO_ID VARCHAR2(1)
 );
 
 create table if not exists data.georreferencias_instituciones(

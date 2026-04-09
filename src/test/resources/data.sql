@@ -21,9 +21,9 @@ VALUES (3, true, 'Calle 13', 'Calle 32', 'Calle 33', '45', '2B', 'Zona de escuel
 INSERT INTO data.georreferencias_personas (georreferencia_id, persona_id) VALUES (2, 1);
 -- Persona 10 con dos georreferencias
 INSERT INTO data.georreferencias (id, edificio_electoral, calle, numero, ug_id, fecha_creacion, estado_edilicio_id) 
-VALUES (10, true, 'Calle Combinada', '100', 1, NOW(), 1);
+VALUES (10, true, 'Calle Combinada', '100', 1, NOW(), '0');
 INSERT INTO data.georreferencias (id, edificio_electoral, calle, numero, ug_id, fecha_creacion, estado_edilicio_id) 
-VALUES (11, false, 'Calle Vieja', '200', 1, NOW(), 4);
+VALUES (11, false, 'Calle Vieja', '200', 1, NOW(), '4');
 
 -- Nota compartida (ID 50)
 INSERT INTO data.notas (id, texto, fecha_creacion, delete, fecha_recordatorio, recordatorio_cancelado) 

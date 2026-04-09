@@ -53,7 +53,7 @@ public class GeorreferenciaInstitucionControllerTest {
         dto.setBarrioId(10L);
         dto.setCiudadId(500L);
         dto.setProvinciaId(1);
-        dto.setEstadoEdilicioId(1);
+        dto.setEstadoEdilicioId("1");
 
         mockMvc.perform(post("/api/instituciones/100/georreferencias")
                 .contentType(MediaType.APPLICATION_JSON)
