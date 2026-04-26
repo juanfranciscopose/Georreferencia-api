@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class loggerInterceptor implements HandlerInterceptor{
+public class LoggerInterceptor implements HandlerInterceptor{
     
     private static final String KEY_TIME = "x-endpoint-start-time";
     private static final String START = "Start";

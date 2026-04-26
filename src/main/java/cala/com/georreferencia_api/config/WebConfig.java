@@ -5,14 +5,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import cala.com.georreferencia_api.interceptors.loggerInterceptor;
+import cala.com.georreferencia_api.interceptors.LoggerInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Bean
-    public loggerInterceptor loggingInterceptor() {
-        return new loggerInterceptor();
+    public LoggerInterceptor loggingInterceptor() {
+        return new LoggerInterceptor();
     }
 
     @Override
