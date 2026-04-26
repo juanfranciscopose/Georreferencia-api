@@ -39,7 +39,7 @@ public class loggerInterceptor implements HandlerInterceptor{
             return;
 
         var startTime = (String) request.getAttribute(KEY_TIME);
-        var duration = System.currentTimeMillis() - Long.parseLong(startTime) / 1000d;
+        var duration = (System.currentTimeMillis() - Long.parseLong(startTime)) / 1000.0;
 
         if (ex != null) {
             log.error("{} {} {}",buildLogMessage(THROW, duration, request, response), SEPARATOR, ex.getMessage());
